@@ -127,7 +127,7 @@ const char* binaryOpStr(BinaryOp op) {
     }
 }
 
-/*
+/**
  * Recursively prints child nodes of an AST node in a tree structure.
  *
  * This function ensures correct ASCII tree formatting by propagating
@@ -151,7 +151,7 @@ void printChildren(const Expr** children, int count, int depth, int sibling) {
     }
 }
 
-/*
+/**
  * Prints an AST node as an ASCII tree.
  *
  * The core idea is the use of a "sibling bitmask":
