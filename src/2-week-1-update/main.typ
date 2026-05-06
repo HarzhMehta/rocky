@@ -51,6 +51,6 @@
 
 #metadata((
   title: "2 - Lexer Almost Done! (Week 1)",
-  description: "A quick look at the currently merged/open issues and PRs, solving blocked issues, code demos and discussing review etiquette.",
+  description: "A quick look at the currently merged/open issues and PRs, solving blocked issues related to grammar and lexer, code demos and discussing review etiquette.",
   date: "2026-05-21",
 ))<docs-config>
