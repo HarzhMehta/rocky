@@ -11,8 +11,6 @@ typedef enum {
 
     /*  Identifiers  */
     TOKEN_IDENTIFIER,
-    TOKEN_AND,
-    TOKEN_OR,
     TOKEN_ELSE,
     TOKEN_IF,
     TOKEN_PRINT,

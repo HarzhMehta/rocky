@@ -134,7 +134,7 @@ void test_parser_binary_comparison(void) {
 }
 
 void test_parser_binary_bitwise(void) {
-    TokenKind ops[] = { TOKEN_AND, TOKEN_OR, TOKEN_CARET, TOKEN_LSHIFT, TOKEN_RSHIFT };
+    TokenKind ops[] = { TOKEN_AMP, TOKEN_PIPE, TOKEN_CARET, TOKEN_LSHIFT, TOKEN_RSHIFT };
     BinaryOp bops[] = { BINOP_BAND, BINOP_BOR, BINOP_BXOR, BINOP_SHL, BINOP_SHR };
 
     for (int i = 0; i < 5; i++) {

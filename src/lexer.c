@@ -239,10 +239,10 @@ Token lexer_next_token(Lexer *lexer){
             return make_token(lexer, match(lexer, '=') ? TOKEN_GTEQ : match(lexer, '>') ? TOKEN_RSHIFT : TOKEN_GT );
 
         case '&':
-            return make_token(lexer, match(lexer, '&')?TOKEN_AMP:TOKEN_AND);
+            return make_token(lexer, match(lexer, '&')?TOKEN_AMPAMP:TOKEN_AMP);
 
         case '|':
-            return make_token(lexer, match(lexer, '|')?TOKEN_PIPE:TOKEN_OR);
+            return make_token(lexer, match(lexer, '|')?TOKEN_PIPEPIPE:TOKEN_PIPE);
         
         case '~':
             return make_token(lexer, TOKEN_TILDE);

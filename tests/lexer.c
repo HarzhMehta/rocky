@@ -40,8 +40,8 @@ void test_lexer_multi_char_operators(void) {
     assert_token("-=", TOKEN_MINUS_EQUAL, "-=");
     assert_token("<<", TOKEN_LSHIFT, "<<");
     assert_token(">>", TOKEN_RSHIFT, ">>");
-    assert_token("&&", TOKEN_AMP, "&&");
-    assert_token("||", TOKEN_PIPE, "||");
+    assert_token("&&", TOKEN_AMPAMP, "&&");
+    assert_token("||", TOKEN_PIPEPIPE, "||");
 }
 
 void test_lexer_integers(void) {
