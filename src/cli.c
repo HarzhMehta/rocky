@@ -12,10 +12,6 @@ static void write_err(char *errbuf, size_t errbuf_size, const char *message) {
 static int rocky_cli_inline_code_cb(struct argparse *self, const struct argparse_option *option) {
 	int *count = (int *)(intptr_t)option->data;
 	(*count)++;
-	if (*count > 1) {
-		self->error = "-c provided more than once";
-		return -1;
-	}
 	return 0;
 }
 
@@ -62,8 +58,9 @@ RockyCliParseStatus rocky_cli_parse(
 	rocky_cli_options_init(options);
 
 	int inline_code_count = 0;
+	int help_requested = 0;
 	struct argparse_option parser_options[] = {
-		OPT_HELP(),
+		OPT_BOOLEAN('h', "help", &help_requested, "Show this help", NULL, 0, OPT_NONEG),
 		OPT_BOOLEAN(0, "dump-tokens", &options->dump_tokens, "Print lexer tokens", NULL, 0, 0),
 		OPT_BOOLEAN(0, "dump-ast", &options->dump_ast, "Print parser AST", NULL, 0, 0),
 		OPT_STRING('c', NULL, &options->inline_code, "Inline source code input", rocky_cli_inline_code_cb, (intptr_t)&inline_code_count, 0),
@@ -71,7 +68,7 @@ RockyCliParseStatus rocky_cli_parse(
 	};
 
 	struct argparse parser;
-	if (argparse_init(&parser, parser_options, rocky_cli_usages, 0) != 0) {
+	if (argparse_init(&parser, parser_options, rocky_cli_usages, ARGPARSE_IGNORE_UNKNOWN_ARGS) != 0) {
 		write_err(errbuf, errbuf_size, "internal error: failed to initialize parser");
 		return ROCKY_CLI_PARSE_ERROR;
 	}
@@ -87,14 +84,25 @@ RockyCliParseStatus rocky_cli_parse(
 	}
 
 	int positional_count = argparse_parse(&parser, argc, copy);
-	if (parser.help_requested) {
+	if (help_requested) {
+		argparse_usage(&parser);
 		free(copy);
 		return ROCKY_CLI_PARSE_HELP;
 	}
-	if (positional_count < 0) {
-		write_err(errbuf, errbuf_size, parser.error ? parser.error : "unknown option");
+
+	if (inline_code_count > 1) {
+		write_err(errbuf, errbuf_size, "-c provided more than once");
 		free(copy);
 		return ROCKY_CLI_PARSE_ERROR;
+	}
+
+	// Check if any of the parsed positional arguments start with '-' (unknown options)
+	for (int i = 0; i < positional_count; i++) {
+		if (copy[i] && copy[i][0] == '-') {
+			write_err(errbuf, errbuf_size, "unknown option");
+			free(copy);
+			return ROCKY_CLI_PARSE_ERROR;
+		}
 	}
 
 	if (positional_count == 0 && !options->inline_code) {
@@ -116,7 +124,7 @@ RockyCliParseStatus rocky_cli_parse(
 	}
 
 	if (positional_count == 1) {
-		options->input_file = copy[1];
+		options->input_file = copy[0];
 	}
 	free(copy);
 
